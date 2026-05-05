@@ -9,14 +9,6 @@ context:
   component_version: ${{ component_name ~ major_version }}
   cxx_name: ${{ "lib" ~ name }}
   python_name: ${{ name ~ "-python" }}
-  python_min: "3.12"
-  python_max: "3.13"
-  protobuf_version: "6.33.5"
-
-  # osx-arm64
-  libabseil_version: ">=20260107.0,<20260108.0a0"
-  qt6_main_version: ">=6.11.0,<6.12.0a0"
-  tinyxml2_version: ">=11.0.0,<11.1.0a0"
 
 recipe:
   name: ${{ name }}
@@ -44,21 +36,21 @@ outputs:
     requirements:
       build:
         - ${{ compiler('c') }}
-        #- ${{ stdlib('c') }}
+        - ${{ stdlib('c') }}
         - ${{ compiler('cxx') }}
         - cmake
         - pkg-config
         - ninja
         - if: build_platform != target_platform
           then:
-            - python >=${{ python_min }},<${{ python_max }}
+            - python
             - cross-python_${{ target_platform }}
             - pybind11
             - pybind11-abi
-            - libabseil ${{ libabseil_version }}
-            - libprotobuf ${{ protobuf_version }}.*
+            - libabseil
+            - libprotobuf
             - libgz-msgs
-            - qt6-main ${{ qt6_main_version }}
+            - qt6-main
         - if: unix
           then:
             - make
@@ -77,15 +69,15 @@ outputs:
         - libgz-utils
         - libgz-math
         - libgz-tools
-        - libabseil ${{ libabseil_version }}
-        - libprotobuf ${{ protobuf_version}}.*
-        - qt6-main ${{ qt6_main_version }}
-        - tinyxml2 ${{ tinyxml2_version }}
+        - libabseil
+        - libprotobuf
+        - qt6-main
+        - tinyxml2
         - if: linux
           then:
             - libgl-devel
             - xorg-libxfixes
-        - python >=${{ python_min }},<${{ python_max }}
+        - python
         - pybind11
         - pybind11-abi
         - if: win
@@ -120,7 +112,7 @@ outputs:
     requirements:
       build:
         - ${{ compiler('c') }}
-        #- ${{ stdlib('c') }}
+        - ${{ stdlib('c') }}
         - ${{ compiler('cxx') }}
         - swig
         - ninja
@@ -128,7 +120,7 @@ outputs:
         - pkg-config
         - if: build_platform != target_platform
           then:
-            - python >=${{ python_min }},<${{ python_max }}
+            - python
             - cross-python_${{ target_platform }}
             - pybind11
             - pybind11-abi
@@ -137,7 +129,7 @@ outputs:
         - ${{ pin_subpackage(cxx_name, exact=True) }}
         - libgz-common
         - libgz-msgs
-        - python >=${{ python_min }},<${{ python_max }}
+        - python
         - pybind11
         - pybind11-abi
         - pytest
@@ -145,8 +137,8 @@ outputs:
           then:
             - xorg-libxfixes
             - libgl-devel
-        - libabseil ${{ libabseil_version }}
-        - libprotobuf ${{ protobuf_version }}.*
+        - libabseil
+        - libprotobuf
       run:
         - ${{ pin_subpackage(cxx_name, exact=True) }}
         - python
@@ -161,7 +153,7 @@ outputs:
       host:
         # This is not a real dependency, but we ensure that we build a different variant of gz-sim for each
         # python version, and that make sense as there is different variant of gz-sim for each python version.
-        - python >=${{ python_min }},<${{ python_max }}
+        - python
       run:
         - ${{ pin_subpackage(cxx_name, exact=True) }}
         - ${{ pin_subpackage(python_name, upper_bound='x.x.x') }}
